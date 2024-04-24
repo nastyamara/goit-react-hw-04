@@ -1,10 +1,10 @@
-export default function ImageGallery({ images}) {
+import ImageCard from "../ImageCard/ImageCard";
+
+export default function ImageGallery({ images, openModal }) {
     return (
-        <ul>
+        <ul className="imgGallery" onClick={openModal}>
 	{images.map((image)=>(<li key={image.id}>
-		<div>
-            <img src={image.urls.small} alt={image.alt_description} />
-		</div>
+<ImageCard image={image} />
 	</li>))}
 	
 </ul>

@@ -13,7 +13,9 @@ const searchId = useId();
     return (
       <header>
         
-        <Formik initialValues={{
+        <Formik
+        
+          initialValues={{
           search: '',
         }}
           onSubmit={(values, actions) => {
@@ -27,14 +29,16 @@ const searchId = useId();
        
           }}
         > 
-            <Form> 
-                <label htmlFor={searchId}>Name</label>
-            <Field name="search" id={ searchId } />
+          
+                      <Form className='searchForm'> 
+                
+            <Field  className="searchInput"name="search" id={ searchId } />
             
              
-            <button type="submit">Add contact</button>
+            <button type="submit" className="searchBtn">SEARCH</button>
             <Toaster />
 </Form>
+ 
         </Formik>
 
 

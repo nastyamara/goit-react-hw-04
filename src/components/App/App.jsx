@@ -5,12 +5,27 @@ import Error from "../Error/Error"
 import LoadMoreBtn from "../LoadMoreBtn/LoadMoreBtn"
 import { fetchImages } from "../../imagesAPI"
 import { useState, useEffect } from "react"
+import ModalImage from "../Modal/ModalImage"
 
-
-
-  
+const customStyles = {
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
     
-// fetchImages();
+    padding: '0',
+    border: 'none',
+    borderRadius: '0',
+   
+  },
+  overlay: {
+    backgroundColor: 'rgb(1, 1, 1, 0.9)',
+       
+   } 
+};
 
 function App() {
 
@@ -19,20 +34,37 @@ function App() {
   const [error, setError] = useState(false);
   const [page, setPage] = useState(1);
   const [query, setQuery] = useState('');
+  const [image, setImage] = useState();
+  const [showBtn, setShowBtn] = useState(false);
+
+   
+  const [modalIsOpen, setIsOpen] = useState(false);
+  function openModal(e) {
+      if (event.target.nodeName !== 'IMG') {
+    return;
+  }
+
+    setIsOpen(true);
+    e.preventDefault();
+    setImage(e.target.dataset.source) 
+  }
+
+
+  function closeModal(e) {
+    e.preventDefault();
+      setIsOpen(false);
+      console.log('closed')
+  }
 
   const handleSearch = (newQuery) => {
     setImages([]);
     setQuery(newQuery);
     setPage(1);
-   
   }
-
- 
 
   const handleLoadMore = () => {
     setPage(page+1)
   }
-
 
   useEffect(() => {
     if (query === '') {
@@ -42,28 +74,34 @@ function App() {
       try {
         setError(false);
       setLoading(true);
-      const data = await fetchImages(query, page); 
-      setImages((prevImages) => { return [...prevImages, ...data] });
+        const data = await fetchImages(query, page); 
+                setShowBtn(data.total_pages > page ? true : false)
+      
+        setImages((prevImages) => { return [...prevImages, ...data.results] });
+
     } catch (error) {
       setError(true);
     }
     finally {
-      setLoading(false);
-      }
+        setLoading(false);
+             }
     }
     getImages()
-    console.log(query, page)
-   },[query,page]) 
 
-
+  }, [query, page]) 
 
     return (
-      <div>
+      <div> 
         <SearchBar handleSearch={handleSearch} />
         {error && <Error/>}
         {loading && <Loader/>}
-       {images.length>0 &&  <ImageGallery images={images}/>}
-        {images.length > 0 && !loading && <LoadMoreBtn onClick={ handleLoadMore } />}
+        {images.length > 0 && <ImageGallery images={images} openModal={openModal} closeModal={ closeModal} modalIsOpen={modalIsOpen}/>}
+        <ModalImage
+      
+          openModal={openModal} modalIsOpen={modalIsOpen} closeModal={closeModal} image={image} customStyles={ customStyles} />
+        {images.length > 0 && !loading &&
+          showBtn &&
+          <LoadMoreBtn onClick={handleLoadMore} />}
       </div>
     )
   
