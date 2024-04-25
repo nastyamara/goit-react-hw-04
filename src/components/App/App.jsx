@@ -5,7 +5,7 @@ import Error from "../Error/Error"
 import LoadMoreBtn from "../LoadMoreBtn/LoadMoreBtn"
 import { fetchImages } from "../../imagesAPI"
 import { useState, useEffect } from "react"
-import ModalImage from "../Modal/ModalImage"
+import ImageModal from "../ImageModal/ImageModal"
 
 const customStyles = {
   content: {
@@ -40,7 +40,7 @@ function App() {
    
   const [modalIsOpen, setIsOpen] = useState(false);
   function openModal(e) {
-      if (event.target.nodeName !== 'IMG') {
+      if (e.target.nodeName !== 'IMG') {
     return;
   }
 
@@ -53,7 +53,7 @@ function App() {
   function closeModal(e) {
     e.preventDefault();
       setIsOpen(false);
-      console.log('closed')
+    
   }
 
   const handleSearch = (newQuery) => {
@@ -96,7 +96,7 @@ function App() {
         {error && <Error/>}
         {loading && <Loader/>}
         {images.length > 0 && <ImageGallery images={images} openModal={openModal} closeModal={ closeModal} modalIsOpen={modalIsOpen}/>}
-        <ModalImage
+        <ImageModal
       
           openModal={openModal} modalIsOpen={modalIsOpen} closeModal={closeModal} image={image} customStyles={ customStyles} />
         {images.length > 0 && !loading &&

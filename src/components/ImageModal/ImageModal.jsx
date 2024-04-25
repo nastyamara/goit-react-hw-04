@@ -6,7 +6,7 @@ Modal.setAppElement('#root');
 
 
 
-export default function ModalImage({ modalIsOpen,  closeModal, image, customStyles}) {
+export default function ImageModal({ modalIsOpen,  closeModal, image, customStyles}) {
 
 
 
